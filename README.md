@@ -21,6 +21,8 @@ or add it by hand to your `composer.json` file.
 ## Getting Started
 
 ```php
+use Modassir\Promise\Promise;
+
 (new Promise(function($resolve, $reject) {
   $resolve('success');
   $reject('An error accurred.');
@@ -61,6 +63,8 @@ or add it by hand to your `composer.json` file.
 ```
 
 ```php
+use Modassir\Promise\Promise;
+
 $promise = new Promise(function($resolve, $reject) {
   $resolve('success');
   $reject('An error accurred.');
@@ -73,7 +77,6 @@ $promise->then(function($res) {
 })->finally(function() {
   // echo: strtoupper('Hello Worlds!');
 });
-
 
 $promise = new Promise(function($resolve, $reject) {
   $resolve('success');
