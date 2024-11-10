@@ -62,6 +62,8 @@ use Modassir\Promise\Promise;
 });
 ```
 
+**OR**
+
 ```php
 use Modassir\Promise\Promise;
 
