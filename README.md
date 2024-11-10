@@ -8,7 +8,7 @@
 <a href="https://github.com/lazervel/promise/releases"><img src="https://img.shields.io/github/release/lazervel/promise.svg?style=flat-square" alt="Latest Version"></img></a>
 </p>
 
-## Installation
+## Composer Installation
 
 Installation is super-easy via [Composer](https://getcomposer.org)
 
