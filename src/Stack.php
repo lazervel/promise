@@ -7,7 +7,7 @@ namespace Modassir\Promise;
 \error_reporting(E_ALL);
 \ini_set('display_errors', 0);
 
-abstract class Stack
+class Stack
 {
   private $message;
   private $code;
