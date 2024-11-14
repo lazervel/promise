@@ -9,6 +9,7 @@
     "promises",
     "php"
   ],
+  "homepage": "https://github.com/lazervel",
   "autoload": {
     "psr-4": {
       "Modassir\\Promise\\": "src/"

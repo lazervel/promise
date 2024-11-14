@@ -2,87 +2,95 @@
 
 declare(strict_types=1);
 
+/**
+ * The PHP Promise handling PHP promises with additional utilities and features.
+
+ * The (promise) Github Repository
+ * @see       https://github.com/lazervel/promise
+ * 
+ * @author    Shahzada Modassir
+ * @copyright (c) Shahzada Modassir 2024
+ * 
+ * @license   MIT License
+ * @see       https://github.com/lazervel/promise/blob/main/LICENSE
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Modassir\Promise;
 
-class Promise
+class Promise extends Executor
 {
-  public $state = 'pending';
-  private $executor;
-  public $value;
-
   /**
    * Creates a new Promise instance.
+   * Initializes a new instance of Promise with the given $executor.
+   * 
    * @param callable $executor [required]
    *                           A callback used to initialize the promise.
    * @return void
    */
   public function __construct(callable $executor)
   {
-    $this->executor = Executor::with($this)->execute($executor);
+    parent::__construct($executor);
   }
 
   /**
-   * @param callable $onFulfilled [optional]
-   *                              The callback to execute when the Promise is resolved.
-   * @return \Modassir\Promise\Promise
-   */
-  public function done(?callable $onFulfilled = null)
-  {
-    return $this->then($onFulfilled);
-  }
-
-  /**
-   * @param callable $onRejected [optional]
-   *                             The callback to execute when the Promise is rejected.
-   * @return \Modassir\Promise\Promise
-   */
-  public function fail(?callable $onRejected = null)
-  {
-    return $this->catch($onRejected);
-  }
-
-  /**
+   * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected).
+   * The resolved value cannot be modified from the callback.
+   * 
    * @param callable $onFinally [optional]
    *                            The callback to execute when the Promise is settled (fulfilled or rejected).
    * @return \Modassir\Promise\Promise
    */
-  public function finally(?callable $onFinally = null)
+  public function finally(callable $onFinally = null)
   {
-    return $this->done($onFinally)->fail($onFinally);
+    if ($onFinally) {
+      $this->queue[] = ['finally' => $onFinally];
+    }
+    return $this;
   }
 
   /**
+   * Attaches a callback for only the rejection of the Promise.
+   * 
    * @param callable $onRejected [optional]
    *                             The callback to execute when the Promise is rejected.
-   * @return \Modassir\Promise\Promise
+   * 
+   * @return \Modassir\Promise\Promise A Promise for the completion of the callback.
    */
-  public function catch(?callable $onRejected = null)
+  public function catch(callable $onRejected = null)
   {
     return $this->then(null, $onRejected);
   }
 
   /**
-   * @param callable $onFinally [optional]
-   *                            The callback to execute when the Promise is settled (fulfilled or rejected).
-   * @return \Modassir\Promise\Promise
-   */
-  public function always(?callable $onFinally = null)
-  {
-    return $this->finally($onFinally);
-  }
-
-  /**
+   * Attaches callbacks for the resolution and/or rejection of the Promise.
+   * 
    * @param callable $onFulfilled [optional]
    *                              The callback to execute when the Promise is resolved.
    * @param callable $onRejected  [optional]
    *                              The callback to execute when the Promise is rejected.
    * 
-   * @return \Modassir\Promise\Promise
+   * @return \Modassir\Promise\Promise A Promise for the completion of which ever callback is executed.
    */
-  public function then(?callable $onFulfilled = null, ?callable $onRejected = null)
+  public function then(callable $onFulfilled = null, callable $onRejected = null)
   {
-    $this->state === 'rejected' ? $onRejected && $onRejected($this->value) : $onFulfilled && $onFulfilled($this->value);
+    $this->addHandlers($onFulfilled, $onRejected);
     return $this;
+  }
+
+  /**
+   * Destructor method.
+   * This method is automatically called when the object is destroyed.
+   * It is used to release any resources or perform cleanup tasks,
+   * such as closing database connections, file handles, or other resources.
+   * 
+   * @throws Modassir\Promise\Exception\UnhandledPromiseRejection Rejected without catch blocking.
+   * @return void
+   */
+  public function __destruct()
+  {
+    $this->finalExecutorExecute();
   }
 }
 ?>
