@@ -32,6 +32,13 @@ use Modassir\Promise\Exception\UnhandledPromiseRejection;
   protected $state = 'pending';
 
   /**
+   * Actual callbacks Resolve, Reject and Finally store in queue
+   * 
+   * @var array
+   */
+  protected $queue = [];
+
+  /**
    * Flag to know if executor handler was already fired
    * 
    * @var bool
@@ -86,12 +93,6 @@ use Modassir\Promise\Exception\UnhandledPromiseRejection;
   private $rejected = false;
 
   /**
-   * 
-   * @var array
-   */
-  protected $queue = [];
-
-  /**
    * Creates a new Executor instance.
    * Initializes a new instance of Executor with the given $executor.
    * 
@@ -111,6 +112,11 @@ use Modassir\Promise\Exception\UnhandledPromiseRejection;
    */
   protected function finalExecutorExecute() : void
   {
+    if (!$this->catched && $this->rejected) {
+      $this->execute();
+      return;
+    }
+
     try {
       ErrorHandler::PHP_ErrorHandlerActivate();
       $this->execute();
@@ -140,12 +146,12 @@ use Modassir\Promise\Exception\UnhandledPromiseRejection;
    */
   private function reject($value = null) : void
   {
-    $this->rejected = true;
+    if (!$this->locked) $this->rejected = true;
     $this->fireWith($value, 'rejected');
   }
 
   /**
-   * 
+   * Returns a forced static function Handler Resolve or Reject
    * 
    * @param string $handler [required]
    * @return static Returns resolve or reject Handler.
