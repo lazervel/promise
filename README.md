@@ -1,6 +1,10 @@
 # PHP Promise
 
 <p align="center">
+<img src="https://raw.githubusercontent.com/lazervel/assets/main/banners/promise.png" alt="Promise"/>
+</p>
+
+<p align="center">
 <a href="https://github.com/shahzadamodassir"><img src="https://img.shields.io/badge/Author-Shahzada%20Modassir-%2344cc11?style=flat-square"/></a>
 <a href="LICENSE"><img src="https://img.shields.io/github/license/lazervel/promise?style=flat-square"/></a>
 <a href="https://packagist.org/packages/modassir/promise"><img src="https://img.shields.io/packagist/dt/modassir/promise.svg?style=flat-square" alt="Total Downloads"></img></a>
