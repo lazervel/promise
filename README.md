@@ -50,9 +50,9 @@ use Modassir\Promise\Promise;
 });
 
 (new Promise(function($resolve, $reject) {
+  call_undfined_function();
   $resolve('success');
   $reject('An error accurred.');
-  call_undfined_function();
 }))->then(function() {
 
 })->catch(function($res) {
@@ -85,9 +85,9 @@ $promise->then(function($res) {
 });
 
 $promise = new Promise(function($resolve, $reject) {
+  call_undfined_function();
   $resolve('success');
   $reject('An error accurred.');
-  call_undfined_function();
 });
 
 $promise->then(function() {
